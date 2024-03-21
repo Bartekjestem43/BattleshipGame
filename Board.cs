@@ -24,9 +24,11 @@ namespace BattleshipGame
             shots = new bool[Size, Size];
         }
 
+        // Metoda SetShipsManually() w klasie Player
         public void SetShipsManually()
         {
             Console.WriteLine("Set your ships:");
+            Draw(); // Dodaj wywołanie metody Draw() przed rozpoczęciem ustawiania statków
             foreach (var ship in ships)
             {
                 bool placed = false;
@@ -34,25 +36,43 @@ namespace BattleshipGame
                 {
                     Console.Write($"Enter starting position for {ship.Size}-length ship (e.g., A1): ");
                     string position = Console.ReadLine().ToUpper();
-                    int x = position[0] - 'A';
-                    int y = int.Parse(position.Substring(1)) - 1;
 
-                    Console.Write("Enter direction (R for right, D for down): ");
-                    char direction = Console.ReadLine().ToUpper()[0];
-                    bool horizontal = direction == 'R';
-
-                    if (CanPlaceShip(ship, x, y, horizontal))
+                    // Sprawdź, czy wprowadzona pozycja ma długość co najmniej 2 (A1)
+                    if (position.Length >= 2)
                     {
-                        PlaceShip(ship, x, y, horizontal);
-                        placed = true;
+                        int x = position[1] - '1'; // Numer w kolumnie (1-10)
+                        int y = position[0] - 'A'; // Litera w wierszu (A-J)
+
+                        if (x >= 0 && x < Size && y >= 0 && y < Size)
+                        {
+                            Console.Write("Enter direction (R for right, D for down): ");
+                            char direction = Console.ReadLine().ToUpper()[0];
+                            bool horizontal = direction == 'R';
+
+                            if (CanPlaceShip(ship, x, y, horizontal))
+                            {
+                                PlaceShip(ship, x, y, horizontal);
+                                placed = true;
+                            }
+                            else
+                            {
+                                Console.WriteLine("Cannot place the ship there. Try again.");
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid position. Please enter a position within the board.");
+                        }
                     }
                     else
                     {
-                        Console.WriteLine("Cannot place the ship there. Try again.");
+                        Console.WriteLine("Invalid position. Please enter a position within the board.");
                     }
                 }
             }
         }
+
+
 
 
         private bool CanPlaceShip(Ship ship, int x, int y, bool horizontal)
@@ -98,10 +118,10 @@ namespace BattleshipGame
 
         public void Draw()
         {
-            Console.WriteLine("   1 2 3 4 5 6 7 8 9 10");
+            Console.WriteLine("    A B C D E F G H I J");
             for (int i = 0; i < Size; i++)
             {
-                Console.Write((char)('A' + i) + " ");
+                Console.Write((i + 1).ToString().PadLeft(2) + " ");
                 for (int j = 0; j < Size; j++)
                 {
                     bool shipHit = false;
@@ -121,15 +141,15 @@ namespace BattleshipGame
                     }
                     if (shots[i, j] && shipHit)
                     {
-                        Console.Write("X ");
+                        Console.Write(" X");
                     }
                     else if (shots[i, j] && shipMiss)
                     {
-                        Console.Write("O ");
+                        Console.Write(" O");
                     }
                     else
                     {
-                        Console.Write(". ");
+                        Console.Write(" .");
                     }
                 }
                 Console.WriteLine();
