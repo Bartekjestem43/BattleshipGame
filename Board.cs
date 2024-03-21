@@ -24,11 +24,10 @@ namespace BattleshipGame
             shots = new bool[Size, Size];
         }
 
-        // Metoda SetShipsManually() w klasie Player
         public void SetShipsManually()
         {
             Console.WriteLine("Set your ships:");
-            Draw(); // Dodaj wywołanie metody Draw() przed rozpoczęciem ustawiania statków
+            Draw();
             foreach (var ship in ships)
             {
                 bool placed = false;
@@ -37,11 +36,10 @@ namespace BattleshipGame
                     Console.Write($"Enter starting position for {ship.Size}-length ship (e.g., A1): ");
                     string position = Console.ReadLine().ToUpper();
 
-                    // Sprawdź, czy wprowadzona pozycja ma długość co najmniej 2 (A1)
                     if (position.Length >= 2)
                     {
-                        int x = position[1] - '1'; // Numer w kolumnie (1-10)
-                        int y = position[0] - 'A'; // Litera w wierszu (A-J)
+                        int x = position[1] - '1';
+                        int y = position[0] - 'A';
 
                         if (x >= 0 && x < Size && y >= 0 && y < Size)
                         {
