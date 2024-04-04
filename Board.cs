@@ -1,147 +1,143 @@
 ﻿using System;
 
-namespace BattleshipGame
+namespace BattleShipGame
 {
-    class Board
+    class Plansza
     {
-        private const int Size = 10;
-        private Ship[] ships;
-        private bool[,] shots;
+        private const int Rozmiar = 10;
+        private Statek[] statki;
+        private bool[,] strzaly;
 
-        public Board()
+        public Plansza()
         {
-            ships = new Ship[10];
-            ships[0] = new Ship(4);
-            ships[1] = new Ship(3);
-            ships[2] = new Ship(3);
-            ships[3] = new Ship(2);
-            ships[4] = new Ship(2);
-            ships[5] = new Ship(2);
-            ships[6] = new Ship(1);
-            ships[7] = new Ship(1);
-            ships[8] = new Ship(1);
-            ships[9] = new Ship(1);
-            shots = new bool[Size, Size];
+            statki = new Statek[10];
+            statki[0] = new Statek(4);
+            statki[1] = new Statek(3);
+            statki[2] = new Statek(3);
+            statki[3] = new Statek(2);
+            statki[4] = new Statek(2);
+            statki[5] = new Statek(2);
+            statki[6] = new Statek(1);
+            statki[7] = new Statek(1);
+            statki[8] = new Statek(1);
+            statki[9] = new Statek(1);
+            strzaly = new bool[Rozmiar, Rozmiar];
         }
 
-        public void SetShipsManually()
+        public void UstawStatkiRecznie()
         {
-            Console.WriteLine("Set your ships:");
-            Draw();
-            foreach (var ship in ships)
+            Console.WriteLine("Ustaw swoje statki:");
+            Rysuj();
+            foreach (var statek in statki)
             {
-                bool placed = false;
-                while (!placed)
+                bool umieszczony = false;
+                while (!umieszczony)
                 {
-                    Console.Write($"Enter starting position for {ship.Size}-length ship (e.g., A1): ");
-                    string position = Console.ReadLine().ToUpper();
+                    Console.Write($"Podaj początkową pozycję dla statku długości {statek.Rozmiar} (np. A1): ");
+                    string pozycja = Console.ReadLine().ToUpper();
 
-                    if (position.Length >= 2)
+                    if (pozycja.Length >= 2)
                     {
-                        int x = position[1] - '1';
-                        int y = position[0] - 'A';
+                        int x = pozycja[1] - '1';
+                        int y = pozycja[0] - 'A';
 
-                        if (x >= 0 && x < Size && y >= 0 && y < Size)
+                        if (x >= 0 && x < Rozmiar && y >= 0 && y < Rozmiar)
                         {
-                            Console.Write("Enter direction (R for right, D for down): ");
-                            char direction = Console.ReadLine().ToUpper()[0];
-                            bool horizontal = direction == 'R';
+                            Console.Write("Podaj kierunek (R dla prawo, D dla dół): ");
+                            char kierunek = Console.ReadLine().ToUpper()[0];
+                            bool poziomy = kierunek == 'R';
 
-                            if (CanPlaceShip(ship, x, y, horizontal))
+                            if (MoznaUmiescicStatek(statek, x, y, poziomy))
                             {
-                                PlaceShip(ship, x, y, horizontal);
-                                placed = true;
+                                UmiescStatek(statek, x, y, poziomy);
+                                umieszczony = true;
                             }
                             else
                             {
-                                Console.WriteLine("Cannot place the ship there. Try again.");
+                                Console.WriteLine("Nie można umieścić statku tam. Spróbuj ponownie.");
                             }
                         }
                         else
                         {
-                            Console.WriteLine("Invalid position. Please enter a position within the board.");
+                            Console.WriteLine("Nieprawidłowa pozycja. Podaj pozycję na planszy.");
                         }
                     }
                     else
                     {
-                        Console.WriteLine("Invalid position. Please enter a position within the board.");
+                        Console.WriteLine("Nieprawidłowa pozycja. Podaj pozycję na planszy.");
                     }
                 }
             }
         }
 
-
-
-
-        private bool CanPlaceShip(Ship ship, int x, int y, bool horizontal)
+        private bool MoznaUmiescicStatek(Statek statek, int x, int y, bool poziomy)
         {
-            if (horizontal && y + ship.Size > Size)
+            if (poziomy && y + statek.Rozmiar > Rozmiar)
                 return false;
-            if (!horizontal && x + ship.Size > Size)
+            if (!poziomy && x + statek.Rozmiar > Rozmiar)
                 return false;
 
-            for (int i = 0; i < ship.Size; i++)
+            for (int i = 0; i < statek.Rozmiar; i++)
             {
-                int newX = horizontal ? x : x + i;
-                int newY = horizontal ? y + i : y;
+                int noweX = poziomy ? x : x + i;
+                int noweY = poziomy ? y + i : y;
 
-                if (newX < 0 || newX >= Size || newY < 0 || newY >= Size || shipsAnyOccupiesPosition(newX, newY))
+                if (noweX < 0 || noweX >= Rozmiar || noweY < 0 || noweY >= Rozmiar || CzyKtorysZajmujePozycje(noweX, noweY))
                     return false;
             }
 
             return true;
         }
 
-        private void PlaceShip(Ship ship, int x, int y, bool horizontal)
+        private void UmiescStatek(Statek statek, int x, int y, bool poziomy)
         {
-            for (int i = 0; i < ship.Size; i++)
+            for (int i = 0; i < statek.Rozmiar; i++)
             {
-                int newX = horizontal ? x : x + i;
-                int newY = horizontal ? y + i : y;
+                int noweX = poziomy ? x : x + i;
+                int noweY = poziomy ? y + i : y;
 
-                ship.Positions.Add((newX, newY));
+                statek.Pozycje.Add((noweX, noweY));
             }
         }
 
-        private bool shipsAnyOccupiesPosition(int x, int y)
+        private bool CzyKtorysZajmujePozycje(int x, int y)
         {
-            foreach (var ship in ships)
+            foreach (var statek in statki)
             {
-                if (ship.OccupiesPosition(x, y))
+                if (statek.ZajmujePozycje(x, y))
                     return true;
             }
             return false;
         }
 
-
-        public void Draw()
+        public void Rysuj()
         {
             Console.WriteLine("    A B C D E F G H I J");
-            for (int i = 0; i < Size; i++)
+            for (int i = 0; i < Rozmiar; i++)
             {
                 Console.Write((i + 1).ToString().PadLeft(2) + " ");
-                for (int j = 0; j < Size; j++)
+                for (int j = 0; j < Rozmiar; j++)
                 {
-                    bool shipHit = false;
-                    bool shipMiss = false;
-                    foreach (var ship in ships)
+                    bool trafienieStatek = false;
+                    bool pudloStatek = false;
+                    foreach (var statek in statki)
                     {
-                        if (ship.OccupiesPosition(i, j) && shots[i, j])
+                        if (statek.ZajmujePozycje(i, j) && strzaly[i, j])
                         {
-                            shipHit = true;
+                            trafienieStatek = true;
                             break;
                         }
-                        else if (ship.OccupiesPosition(i, j) && !shots[i, j])
+                        else if (statek.ZajmujePozycje(i, j) && !strzaly[i, j])
                         {
-                            shipMiss = true;
+                            pudloStatek = true;
                             break;
                         }
                     }
-                    if (shots[i, j] && shipHit)
+                    if (strzaly[i, j] && trafienieStatek)
                     {
                         Console.Write(" X");
                     }
-                    else if (shots[i, j] && shipMiss)
+                    else if (strzaly[i, j] && pudloStatek)
                     {
                         Console.Write(" O");
                     }
@@ -154,21 +150,21 @@ namespace BattleshipGame
             }
         }
 
-        public bool FireShot(int x, int y)
+        public bool Ogien(int x, int y)
         {
-            if (shots[x, y])
+            if (strzaly[x, y])
                 return false;
 
-            shots[x, y] = true;
+            strzaly[x, y] = true;
 
-            foreach (var ship in ships)
+            foreach (var statek in statki)
             {
-                if (ship.OccupiesPosition(x, y))
+                if (statek.ZajmujePozycje(x, y))
                 {
-                    ship.RegisterHit(x, y);
-                    if (ship.IsSunk())
+                    statek.ZarejestrujTrafienie(x, y);
+                    if (statek.Zatopiony())
                     {
-                        Console.WriteLine("Hit and sunk a ship!");
+                        Console.WriteLine("Trafienie i zatopienie statku!");
                     }
                     return true;
                 }
@@ -177,43 +173,41 @@ namespace BattleshipGame
             return false;
         }
 
-
-
-        public bool ShipSunk(int x, int y)
+        public bool StatekZatopiony(int x, int y)
         {
-            foreach (var ship in ships)
+            foreach (var statek in statki)
             {
-                if (ship.OccupiesPosition(x, y) && ship.IsSunk())
+                if (statek.ZajmujePozycje(x, y) && statek.Zatopiony())
                     return true;
             }
             return false;
         }
 
-        public bool AllShipsSunk()
+        public bool WszystkieStatkiZatopione()
         {
-            foreach (var ship in ships)
+            foreach (var statek in statki)
             {
-                if (!ship.IsSunk())
+                if (!statek.Zatopiony())
                     return false;
             }
             return true;
         }
 
-        public bool AlreadyFired(int x, int y)
+        public bool JuzStrzelono(int x, int y)
         {
-            return shots[x, y];
+            return strzaly[x, y];
         }
 
-        public void MarkHit(int x, int y)
+        public void OznaczTrafienie(int x, int y)
         {
-            shots[x, y] = true;
-            Console.WriteLine($"Hit at {((char)('A' + x))}{y + 1}");
+            strzaly[x, y] = true;
+            Console.WriteLine($"Trafienie w {((char)('A' + x))}{y + 1}");
         }
 
-        public void MarkMiss(int x, int y)
+        public void OznaczPudlo(int x, int y)
         {
-            shots[x, y] = true;
-            Console.WriteLine($"Miss at {((char)('A' + x))}{y + 1}");
+            strzaly[x, y] = true;
+            Console.WriteLine($"Pudło w {((char)('A' + x))}{y + 1}");
         }
 
     }

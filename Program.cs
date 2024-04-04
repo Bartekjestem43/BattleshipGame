@@ -1,13 +1,13 @@
 ﻿using System;
 
-namespace BattleshipGame
+namespace BattleShipGame
 {
     class Program
     {
         static void Main(string[] args)
         {
-            Game game = new Game();
-            game.StartGame();
+            Gra gra = new Gra();
+            gra.RozpocznijGre();
         }
     }
 }

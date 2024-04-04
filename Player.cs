@@ -1,68 +1,65 @@
 ﻿using System;
 
-namespace BattleshipGame
+namespace BattleShipGame
 {
-    class Player
+    class Gracz
     {
-        private Board shipBoard;
-        private Board firingBoard;
+        private Plansza planszaStatkow;
+        private Plansza planszaOgnia;
 
-        public Player()
+        public Gracz()
         {
-            shipBoard = new Board();
-            firingBoard = new Board();
-            SetShips();
+            planszaStatkow = new Plansza();
+            planszaOgnia = new Plansza();
+            UstawStatki();
         }
 
-        private void SetShips()
+        private void UstawStatki()
         {
-            shipBoard.SetShipsManually();
+            planszaStatkow.UstawStatkiRecznie();
         }
 
-        public void DrawBoards()
+        public void RysujPlansze()
         {
-            Console.WriteLine("Ship board:");
-            shipBoard.Draw();
-            Console.WriteLine("\nFiring board:");
-            firingBoard.Draw();
+            Console.WriteLine("Plansza statków:");
+            planszaStatkow.Rysuj();
+            Console.WriteLine("\nPlansza ognia:");
+            planszaOgnia.Rysuj();
         }
 
-
-
-        public bool Fire()
+        public bool Ogien()
         {
-            Console.Write("Enter coordinates to fire (e.g., A5): ");
-            string coordinates = Console.ReadLine().ToUpper();
-            int x = coordinates[0] - 'A';
-            int y = int.Parse(coordinates.Substring(1)) - 1;
+            Console.Write("Podaj współrzędne do ostrzału (np. A5): ");
+            string wspolrzedne = Console.ReadLine().ToUpper();
+            int x = wspolrzedne[0] - 'A';
+            int y = int.Parse(wspolrzedne.Substring(1)) - 1;
 
-            if (firingBoard.AlreadyFired(x, y))
+            if (planszaOgnia.JuzStrzelono(x, y))
             {
-                Console.WriteLine("You've already fired at this location!");
+                Console.WriteLine("Już strzelałeś w to miejsce!");
                 return false;
             }
 
-            bool hit = shipBoard.FireShot(x, y);
-            if (hit)
+            bool trafienie = planszaStatkow.Ogien(x, y);
+            if (trafienie)
             {
-                firingBoard.MarkHit(x, y);
-                if (shipBoard.ShipSunk(x, y))
+                planszaOgnia.OznaczTrafienie(x, y);
+                if (planszaStatkow.StatekZatopiony(x, y))
                 {
-                    Console.WriteLine("You've sunk a ship!");
+                    Console.WriteLine("Zatopiłeś statek!");
                 }
             }
             else
             {
-                firingBoard.MarkMiss(x, y);
+                planszaOgnia.OznaczPudlo(x, y);
             }
 
-            return hit;
+            return trafienie;
         }
 
-
-        public bool AllShipsSunk()
+        public bool WszystkieStatkiZatopione()
         {
-            return shipBoard.AllShipsSunk();
+            return planszaStatkow.WszystkieStatkiZatopione();
         }
     }
 }

@@ -1,29 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace BattleshipGame
+namespace BattleShipGame
 {
-    class Ship
+    class Statek
     {
-        public int Size { get; }
-        public List<(int, int)> Positions { get; private set; }
-        private int hits;
+        public int Rozmiar { get; }
+        public List<(int, int)> Pozycje { get; private set; }
+        private int trafienia;
 
-        public Ship(int size)
+        public Statek(int rozmiar)
         {
-            Size = size;
-            Positions = new List<(int, int)>();
-            hits = 0;
+            Rozmiar = rozmiar;
+            Pozycje = new List<(int, int)>();
+            trafienia = 0;
         }
 
-        public void AddPositions(List<(int, int)> positions)
+        public void DodajPozycje(List<(int, int)> pozycje)
         {
-            Positions.AddRange(positions);
+            Pozycje.AddRange(pozycje);
         }
 
-        public bool OccupiesPosition(int x, int y)
+        public bool ZajmujePozycje(int x, int y)
         {
-            foreach (var (posX, posY) in Positions)
+            foreach (var (posX, posY) in Pozycje)
             {
                 if (posX == x && posY == y)
                 {
@@ -33,14 +33,14 @@ namespace BattleshipGame
             return false;
         }
 
-        public void RegisterHit(int x, int y)
+        public void ZarejestrujTrafienie(int x, int y)
         {
-            hits++;
+            trafienia++;
         }
 
-        public bool IsSunk()
+        public bool Zatopiony()
         {
-            return hits >= Size;
+            return trafienia >= Rozmiar;
         }
     }
 }

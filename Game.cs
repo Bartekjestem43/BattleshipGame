@@ -1,58 +1,58 @@
 ﻿using System;
+using System.Diagnostics;
 
-namespace BattleshipGame
+namespace BattleShipGame
 {
-    class Game
+    class Gra
     {
-        private Player player1;
-        private Player player2;
+        private Gracz gracz1;
+        private Gracz gracz2;
 
-        public Game()
+        public Gra()
         {
-            player1 = new Player();
-            player2 = new Player();
+            gracz1 = new Gracz();
+            gracz2 = new Gracz();
         }
 
-        public void StartGame()
+        public void RozpocznijGre()
         {
             Console.Clear();
-            Console.WriteLine("Battleship Game\n");
+            Console.WriteLine("Gra w Statki\n");
 
             while (true)
             {
-                Console.WriteLine($"Player 1 - Your Ships (Top) / Enemy's Board (Bottom)");
-                player1.DrawBoards();
+                Console.WriteLine($"Gracz 1 - Twoje Statki (Góra) / Plansza Przeciwnika (Dół)");
+                gracz1.RysujPlansze();
 
-                Console.WriteLine($"Player 2 - Your Ships (Top) / Enemy's Board (Bottom)");
-                player2.DrawBoards();
+                Console.WriteLine($"Gracz 2 - Twoje Statki (Góra) / Plansza Przeciwnika (Dół)");
+                gracz2.RysujPlansze();
 
-                Console.WriteLine("\nPlayer 1 - Fire!");
-                bool hitPlayer1 = player2.Fire();
-                if (hitPlayer1)
+                Console.WriteLine("\nGracz 1 - Ogień!");
+                bool trafienieGracz1 = gracz2.Ogien();
+                if (trafienieGracz1)
                 {
-                    Console.WriteLine("Hit!");
+                    Console.WriteLine("Trafienie!");
                 }
 
-                if (player1.AllShipsSunk())
+                if (gracz1.WszystkieStatkiZatopione())
                 {
-                    Console.WriteLine("Player 2 wins!");
+                    Console.WriteLine("Gracz 2 wygrywa!");
                     break;
                 }
 
-                Console.WriteLine("\nPlayer 2 - Fire!");
-                bool hitPlayer2 = player1.Fire();
-                if (hitPlayer2)
+                Console.WriteLine("\nGracz 2 - Ogień!");
+                bool trafienieGracz2 = gracz1.Ogien();
+                if (trafienieGracz2)
                 {
-                    Console.WriteLine("Hit!");
+                    Console.WriteLine("Trafienie!");
                 }
 
-                if (player2.AllShipsSunk())
+                if (gracz2.WszystkieStatkiZatopione())
                 {
-                    Console.WriteLine("Player 1 wins!");
+                    Console.WriteLine("Gracz 1 wygrywa!");
                     break;
                 }
             }
         }
     }
 }
-
